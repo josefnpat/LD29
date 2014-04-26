@@ -57,16 +57,24 @@ player._move_offset = {
   {x=0,y=1},
 }
 
-function player:moveForward()
+function player:moveForward(map)
   local move_offset = player._move_offset[self._direction]
-  self:setX(self:getX()+move_offset.x)
-  self:setY(self:getY()+move_offset.y)
+  local nx = self:getX()+move_offset.x
+  local ny = self:getY()+move_offset.y
+  if map[ny] and map[ny][nx] == 0 then
+    self:setX(nx)
+    self:setY(ny)
+  end
 end
 
-function player:moveBackward()
+function player:moveBackward(map)
   local move_offset = player._move_offset[self._direction]
-  self:setX(self:getX()-move_offset.x)
-  self:setY(self:getY()-move_offset.y)
+  local nx = self:getX()-move_offset.x
+  local ny = self:getY()-move_offset.y
+  if map[ny] and map[ny][nx] == 0 then
+    self:setX(nx)
+    self:setY(ny)
+  end
 end
 
 function player:turnLeft()

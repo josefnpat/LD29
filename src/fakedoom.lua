@@ -30,13 +30,15 @@ function fakedoom:offset(depth)
 end
 
 function fakedoom:draw(x,y,map)
-  local name = "scarey"
+  local name = "default"
   love.graphics.draw(fakedoom.walls[name].bg,x,y)
   for depth = self.depth,1,-1 do
     local offset = fakedoom:offset(depth)*self.size
-    local intensity = 255 / depth
-    love.graphics.setColor(intensity,intensity,intensity)
     for drawn = -self.side_depth,self.side_depth do
+
+      local intensity = 255 / (depth + math.abs(drawn))
+      love.graphics.setColor(intensity,intensity,intensity)
+
       local draw_map_off = 1
       local scale = 1/(2^(depth-1))
       local edge = scale*self.size
@@ -56,7 +58,9 @@ function fakedoom:draw(x,y,map)
           love.graphics.draw(fakedoom.walls[name].rwall,offset+drawn*edge,offset,0,scale)
         end
       end
-      --love.graphics.print(depth..","..drawn,offset+drawn*edge,offset)
+      if debug_mode then
+        love.graphics.print(depth..","..drawn,offset+drawn*edge,offset)
+      end
     end
   end
 end

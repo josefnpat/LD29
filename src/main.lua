@@ -19,26 +19,20 @@ end
 
 function love.draw()
   local submap = map:submap(player:getX(),player:getY(),player:getDirection())
-  local s = ""
-  for i,v in pairs(submap) do 
-    for j,w in pairs(v) do
---    s = s.."("..i..","..j..")"..w
-      s = s..w
-    end
-    s = s .. "\n";
-  end
-  s = s.. "\np: "..player:getX()..","..player:getY().."\n"..player:getDirection()
+  s = "p: "..player:getX()..","..player:getY().."\n"..player:getDirection()
   obmap:draw(0,0,submap)
   love.graphics.draw(info_img,240,0)
-  map:mini(240,0,player:getX(),player:getY(),submap)
-  love.graphics.print(s,240,60)
+  map:mini(240,0,player:getX(),player:getY())
+  love.graphics.print(s,240,80)
 end
 
 function love.keypressed(key)
-  if key == "up" then
-    player:moveForward()
+  if key == "`" then
+    debug_mode = not debug_mode
+  elseif key == "up" then
+    player:moveForward(map:getData())
   elseif key == "down" then
-    player:moveBackward()
+    player:moveBackward(map:getData())
   elseif key == "right" then
     player:turnRight()
   elseif key == "left" then
