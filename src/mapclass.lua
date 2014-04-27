@@ -46,6 +46,7 @@ function map:load(name)
     local obj = json.decode(raw)
     if obj.version == map._version then
       self._data = obj.data
+      self._start = obj.start
       print("Map "..name.." loaded.")
     else
       print("Map "..name.." load failed. Version mismatch.")
@@ -59,6 +60,7 @@ function map:save(name)
   local obj = {}
   obj.data = self._data
   obj.version = map._version
+  obj.start = map._start
   local raw = json.encode(obj)
   local output = io.open("maps/"..name, "w")
   output:write(raw)
