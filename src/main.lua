@@ -7,22 +7,39 @@ playerclass = require("playerclass")
 mapclass = require("mapclass")
 eventsclass = require("eventsclass")
 
-map = mapclass.new(1,1,4,2,2,"s")
-map:load("s")
-player = playerclass.new(map:getStartX(),map:getStartY(),map:getStartDirection())
-events = eventsclass.new()
-observablemap = fakedoom.new()
-observablemap:setbg(2)
+
 
 function love.load()
-  LovePixlr.bind(320,240,"nearest")
-  info_img = love.graphics.newImage("assets/info.png")
+  if not LovePixlr:isBound() then
+    LovePixlr.bind(320,240,"nearest")
+    info_img = love.graphics.newImage("assets/info.png")
+  end
+
+  map = mapclass.new(1,1,4,2,2,"s")
+  map:load("s")
+  player = playerclass.new(map:getStartX(),map:getStartY(),map:getStartDirection())
+  events = eventsclass.new()
+  require("encounters")
+  observablemap = fakedoom.new()
+  observablemap:setbg(2)
+
   events:force(
-    function() print("Menu Started") end,
-    function() print("Menu Ended") end,
+    function() end,
+    function() end,
     "Welcome to Advanced Cave Crawler",
     {
-      {text="New Game",exec=function() print("new game") end},
+      {text="New Game",exec=function()
+         events:force(
+           function() end,
+           function() end,
+           "Difficulty",
+           {
+             {text="Mommy! Hold my hand!",exec=function() end},
+             {text="I'm prepared.",exec=function() end},
+             {text="I shall exterminate everything around me that restricts me from being the master.",exec=function() end},
+           }
+         )
+       end},
       {text="Quit",exec=function() love.event.quit() end},
     }
   )
@@ -37,6 +54,7 @@ function love.draw()
   love.graphics.draw(info_img,240,0)
   map:mini(240,0,player:getX(),player:getY())
   love.graphics.print(s,240,80)
+  events:draw()
   if debug_mode then
     love.graphics.print(
       "number .. set +\n"..
@@ -48,19 +66,26 @@ end
 function love.keypressed(key)
   if key == "`" then
     debug_mode = not debug_mode
-  elseif key == "up" then
-    if player:moveForward(map:getData()) then
-      events:step()
-    end
-  elseif key == "down" then
-    if player:moveBackward(map:getData()) then
-      events:step()
-    end
-  elseif key == "right" then
-    player:turnRight()
-  elseif key == "left" then
-    player:turnLeft()
   end
+
+  if not events:running() then
+    if key == "up" then
+      if player:moveForward(map:getData()) then
+        events:step()
+      end
+    elseif key == "down" then
+      if player:moveBackward(map:getData()) then
+        events:step()
+      end
+    elseif key == "right" then
+      player:turnRight()
+    elseif key == "left" then
+      player:turnLeft()
+    end
+  else
+    events:keypressed(key)
+  end
+
   if debug_mode then
    if love.keyboard.isDown("lshift") and key ~= "lshift" then
       map:save(key)
@@ -70,9 +95,11 @@ function love.keypressed(key)
       debug_map_place = tonumber(key)
     end
   end
+
 end
 
 function love.update(dt)
+  events:update(dt)
   --require("lovebird").update()
   if debug_mode then
     if love.mouse.isDown("r") then -- clear
@@ -97,7 +124,11 @@ function love.update(dt)
     if next_map then
       map:load(next_map)
     else
-      print("YOU WIN")
+      events:force(
+        function() end,
+        function() love.load() end,
+        "YOU WIN! (?)"
+      )
     end
   end
 end
