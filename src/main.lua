@@ -131,8 +131,8 @@ function love.load()
     info_img = love.graphics.newImage("assets/info.png")
   end
 
-  map = mapclass.new(1,1,4,2,2,"s")
-  map:load("s")
+  map = mapclass.new(10,1,10,20,2,"s")
+  map:load("1")
   player = playerclass.new(map:getStartX(),map:getStartY(),map:getStartDirection())
   observablemap = fakedoom.new()
   observablemap:setbg(2)
