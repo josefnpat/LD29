@@ -1,8 +1,8 @@
 local map = {}
 
-map._version = 2
+map._version = 3
 
-function map.new(startx,starty)
+function map.new(startx,starty,finishx,finishy,next_level)
   local o={}
   o.mini=map.mini
   o.miniEdit=map.miniEdit
@@ -32,6 +32,15 @@ function map.new(startx,starty)
   o._start={x=startx,y=starty}
   o.getStartX=map.getStartX
   o.getStartY=map.getStartY
+
+  o._finish={x=finishx,y=finishy}
+  o.getFinishX=map.getFinishX
+  o.getFinishY=map.getFinishY
+
+  o._next_level = next_level
+  o.getNextLevel = map.getNextLevel
+  o.setNextLevel = map.setNextLevel
+
   o.getData=map.getData
   o.setData=map.setData
   o.save=map.save
@@ -47,6 +56,8 @@ function map:load(name)
     if obj.version == map._version then
       self._data = obj.data
       self._start = obj.start
+      self._finish = obj.finish
+      self._next_level = obj.next_level
       print("Map "..name.." loaded.")
     else
       print("Map "..name.." load failed. Version mismatch.")
@@ -61,6 +72,8 @@ function map:save(name)
   obj.data = self._data
   obj.version = map._version
   obj.start = map._start
+  obj.finish = map._finish
+  obj.next_level = map._next_level
   local raw = json.encode(obj)
   local output = io.open("maps/"..name, "w")
   output:write(raw)
@@ -130,6 +143,22 @@ end
 
 function map:getStartY()
   return self._start.y
+end
+
+function map:getFinishX()
+  return self._finish.x
+end
+
+function map:getFinishY()
+  return self._finish.y
+end
+
+function map:getNextLevel()
+  return self._next_level
+end
+
+function map:setNextLevel(level)
+  self._next_level = level
 end
 
 return map

@@ -6,7 +6,7 @@ fakedoom = require("fakedoom")
 playerclass = require("playerclass")
 mapclass = require("mapclass")
 
-map = mapclass.new(2,2)
+map = mapclass.new(2,2,3,3,"phhbt")
 player = playerclass.new(map:getStartX(),map:getStartY())
 
 obmap = fakedoom.new()
@@ -67,5 +67,8 @@ function love.update(dt)
     if not love.mouse.isDown("l") then
       debug_lmb = true
     end
+  end
+  if player:getX() == map:getFinishX() and player:getY() == map:getFinishY() then
+    map:load(map:getNextLevel())
   end
 end
