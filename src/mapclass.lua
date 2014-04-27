@@ -11,7 +11,7 @@ function map.new(startx,starty,startdir,finishx,finishy,next_level)
   for y = 1,20 do
     o._data[y] = {}
     for x = 1,20 do
-      o._data[y][x] = 0
+      o._data[y][x] = 1
     end
   end
   o._start={x=startx,y=starty,dir=startdir}

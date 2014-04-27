@@ -1,6 +1,8 @@
 require("lovepixlr").init()
 require("json")
 
+dong2lib = require("dong2lib")
+
 font = love.graphics.newFont("assets/fonts/RobotoSlab-Regular.ttf",14)
 love.graphics.setFont(font)
 
@@ -39,6 +41,72 @@ events:force(
   2
 )
 
+-- INPUT DEVICES!
+function love.joystickadded(joystick)
+  local ndong = dong2lib.new(joystick)
+  if ndong then 
+    setBindings(ndong)
+    table.insert(dongs,ndong)
+  end
+end
+
+function setBindings(dong)
+
+  dong:setBind("action",
+    function(self,data)
+      for _,v in pairs(data) do
+        if v then return true end
+      end
+    end,
+    {
+      XBOX_360={args={"A"}},
+      OUYA={args={"O"}},
+      PS3={args={"CROSS"}},
+      KEYBMOUSE={args={"return"," "}},
+    })
+
+  dong:setBind("left",
+    function(self,data) return unpack(data) end,
+    {
+      XBOX_360={args={"DL"}},
+      OUYA={args={"DL"}},
+      PS3={args={"DL"}},
+      KEYBMOUSE={args={"left"}},
+    })
+    
+  dong:setBind("up",
+    function(self,data) return unpack(data) end,
+    {
+      XBOX_360={args={"DU"}},
+      OUYA={args={"DU"}},
+      PS3={args={"DU"}},
+      KEYBMOUSE={args={"up"}},
+    })
+    
+  dong:setBind("right",
+    function(self,data) return unpack(data) end,
+    {
+      XBOX_360={args={"DR"}},
+      OUYA={args={"DR"}},
+      PS3={args={"DR"}},
+      KEYBMOUSE={args={"right"}},
+    })
+    
+  dong:setBind("down",
+    function(self,data) return unpack(data) end,
+    {
+      XBOX_360={args={"DD"}},
+      OUYA={args={"DD"}},
+      PS3={args={"DD"}},
+      KEYBMOUSE={args={"down"}},
+    })
+
+end
+
+dongs = {}
+local keyb_dong = dong2lib.new()
+setBindings(keyb_dong)
+table.insert(dongs,keyb_dong) -- Keyboard and mouse
 
 function love.load()
   if not LovePixlr:isBound() then
@@ -60,10 +128,10 @@ function love.load()
   events:force(
     function() end,
     function() end,
+    "-------------\n"..
     "Advanced Cave Crawler\n"..
-    "by @josefnpat for LD29\n\n"..
-    "Keyboard: Arrow keys & space|return\n"..
-    "(Supports Controllers)",
+    "-------------\n\n"..
+    "@josefnpat #LD48 LD29",
     {
       {text="New Game",exec=function()
          events:force(
@@ -89,14 +157,18 @@ function love.load()
   )
 end
 
+dir_img = love.graphics.newImage("assets/dir.png")
+
 function love.draw()
   local submap = map:submap(player:getX(),player:getY(),player:getDirection())
-  local s = "p: "..player:getX()..","..player:getY().."\n"..
-    player:getDirection()
   observablemap:draw(0,0,submap)
   love.graphics.draw(info_img,240,0)
   map:mini(240,0,player:getX(),player:getY())
-  love.graphics.print(s,240,80)
+  love.graphics.draw(dir_img,280,120,player._direction*math.pi/2+math.pi*3/2,1,1,40,40)
+  local cfont = love.graphics.getFont()
+  local cardinal = {"west","north","east","south"}
+  love.graphics.printf("FACING\n"..string.upper(cardinal[player._direction]),240,
+    80+(80-cfont:getHeight()*2)/2,80,"center")
   events:draw()
   if debug_mode then
     love.graphics.print(
@@ -108,30 +180,13 @@ function love.draw()
 end
 
 function love.keypressed(key)
-  if key == "`" then
-    debug_mode = not debug_mode
+
+  for _,dong in pairs(dongs) do
+    dong:keypressed(key)
   end
 
-  if not events:running() then
-    if key == "up" then
-      if player:moveForward(map:getData()) then
-        if events:step() then
-          game.encounters = game.encounters + 1
-        end
-      end
-    elseif key == "down" then
-      if player:moveBackward(map:getData()) then
-        if events:step() then
-          game.encounters = game.encounters + 1
-        end
-      end
-    elseif key == "right" then
-      player:turnRight()
-    elseif key == "left" then
-      player:turnLeft()
-    end
-  else
-    events:keypressed(key)
+  if key == "`" then
+    debug_mode = not debug_mode
   end
 
   if debug_mode then
@@ -146,8 +201,70 @@ function love.keypressed(key)
 
 end
 
+function check_all_dongs(bind)
+  for i,v in pairs(dongs) do
+    if v:getBind(bind) then
+      return true
+    end
+  end
+end
+
 function love.update(dt)
+
+  for _,dong in pairs(dongs) do
+    dong:update(dt)
+  end
+
   events:update(dt)
+
+  if not events:running() then
+
+    if check_all_dongs("up") then --key == "up" then
+      if input_up then
+        input_up = false
+        if player:moveForward(map:getData()) then
+          if events:step() then
+            game.encounters = game.encounters + 1
+          end
+        end
+      end
+    else
+      input_up = true
+    end
+
+    if check_all_dongs("down") then --key == "down" then
+      if input_down then
+        input_down = false
+        if player:moveBackward(map:getData()) then
+          if events:step() then
+            game.encounters = game.encounters + 1
+          end
+        end
+      end
+    else
+      input_down = true
+    end
+
+    if check_all_dongs("right") then --key == "right" then
+      if input_right then
+        input_right = false
+        player:turnRight()
+      end
+    else
+      input_right = true
+    end
+
+    if check_all_dongs("left") then --key == "left" then
+      if input_left then
+        input_left = false
+        player:turnLeft()
+      end
+    else
+      input_left = true
+    end
+
+  end
+
   --require("lovebird").update()
   if debug_mode then
     if love.mouse.isDown("r") then -- clear
@@ -164,6 +281,7 @@ function love.update(dt)
       debug_lmb = true
     end
   end
+
   if player:getX() == map:getFinishX() and player:getY() == map:getFinishY() then
     local next_map = map:getNextLevel()
     player:setX(map:getStartX())
@@ -193,4 +311,5 @@ function love.update(dt)
       )
     end
   end
+
 end

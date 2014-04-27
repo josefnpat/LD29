@@ -67,11 +67,13 @@ function events:draw()
 end
 
 function events:update(dt)
+
   if #self._queue > 0 then
     self._current = table.remove(self._queue)
     self._current_choice = 1
     self._current.start()
   end
+
   if self._current and self._current.timeout then
     self._current.timeout = self._current.timeout - dt
     if self._current.timeout < 0 then
@@ -79,26 +81,52 @@ function events:update(dt)
       self._current = nil
     end
   end
-end
 
-function events:keypressed(key)
-  if key == "up" and self._current.choices then
-    self._current_choice = self._current_choice - 1
-    if self._current_choice < 1 then
-      self._current_choice = #self._current.choices
-    end
-  elseif key == "down" and self._current.choices then
-    self._current_choice = self._current_choice + 1
-    if self._current_choice > #self._current.choices then
-      self._current_choice = 1
-    end
-  elseif key == " " or key == "return" then
+  if self._current then
+
     if self._current.choices then
-      self._current.choices[self._current_choice].exec()
+
+      if check_all_dongs("up")  then
+        if input_up then
+          input_up = false
+          self._current_choice = self._current_choice - 1
+          if self._current_choice < 1 then
+            self._current_choice = #self._current.choices
+          end
+        end
+      else
+        input_up = true
+      end
+
+      if check_all_dongs("down") then
+        if input_down then
+          input_down = false
+          self._current_choice = self._current_choice + 1
+          if self._current_choice > #self._current.choices then
+            self._current_choice = 1
+          end
+        end
+      else
+        input_down = true
+      end
+
     end
-    self._current.finish()
-    self._current = nil
+
+    if check_all_dongs("action") then
+      if input_action then
+        input_action = false
+        if self._current.choices then
+          self._current.choices[self._current_choice].exec()
+        end
+        self._current.finish()
+        self._current = nil
+      end
+    else
+      input_action = true
+    end
+
   end
+
 end
 
 function events:step()
