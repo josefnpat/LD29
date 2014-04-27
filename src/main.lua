@@ -145,7 +145,7 @@ function love.load()
     function() end,
     function() end,
     "-------------\n"..
-    "Advanced Cave Crawler\n"..
+    game_name.."\n"..
     "-------------\n\n"..
     "@josefnpat #LD48 LD29",
     {
@@ -173,6 +173,16 @@ function love.load()
   )
 end
 
+bar_img = love.graphics.newImage("assets/bar.png")
+
+function draw_bar(x,y,w,h,text,ratio,color)
+  love.graphics.draw(bar_img,x,y,0,w,h/20)
+  love.graphics.setColor(color)
+  love.graphics.draw(bar_img,x,y,0,w*ratio,h/20)
+  love.graphics.setColor(255,255,255)
+  love.graphics.printf(text,x,y,w,"center")
+end
+
 dir_img = love.graphics.newImage("assets/dir.png")
 
 function love.draw()
@@ -185,6 +195,13 @@ function love.draw()
   local cardinal = {"west","north","east","south"}
   love.graphics.printf("FACING\n"..string.upper(cardinal[player._direction]),240,
     80+(80-cfont:getHeight()*2)/2,80,"center")
+
+  draw_bar(240,160+20*0,80,20,"ATK: "..player._atk.."/"..player._batk,
+    (player._atk/player._batk),{255,0,0})
+  draw_bar(240,160+20*1,80,20,"DEF: "..player._def.."/"..player._bdef,
+    (player._def/player._bdef),{54,74,196})
+  draw_bar(240,160+20*2,80,20,"GOLD: "..player._gold,1,{122,104,59})
+
   events:draw()
   if debug_mode then
     love.graphics.print(
@@ -320,7 +337,8 @@ function love.update(dt)
             function() love.load() end,
             "YOU WIN!\n\n"..
             "Time: "..math.floor(game.stop_time-game.start_time).."s\n"..
-            "Encounters: "..(game.encounters)
+            "Encounters: "..(game.encounters).."\n"..
+            "Gold: "..(player._gold)
           )
         end,
         "You find a set of stairs that leads to the surface ... but do you really want to leave?"

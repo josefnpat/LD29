@@ -18,38 +18,17 @@ function player.new(x,y,dir)
   o.turnLeft=player.turnLeft
   o.turnRight=player.turnRight
 
+  o._maxatk = 20
+  o._batk = o._maxatk/2
+  o._atk = o._batk
+
   o._maxdef = 100
   o._bdef = o._maxdef/2
   o._def = o._bdef
 
-  o._maxatk = 10
-  o._batk = o._maxatk/2
-  o._atk = o._batk
-
   o._gold = 0
 
   return o
-end
-
-function player:level(lvl)
-  self._level = lvl
-
-  self._maxhp = lvl*10
-  self._bhp = self._bhp or self._maxhp
-  self._hp = self._hp or self._bhp
-
-  self._maxatk = lvl*10
-  self._batk = self._batk or self._maxatk
-  self._atk = self._atk or self._batk
-
-  self._maxdef = lvl*10
-  self._bdef = self._bdef or self._maxdef
-  self._def = self._def or self._bdef
-
-  self._gold = self._gold or 0
-  
-  self._exp = 0
-  self._next_level_exp = lvl*100
 end
 
 function player:getX()
