@@ -37,6 +37,11 @@ function love.keypressed(key)
   elseif key == "left" then
     player:turnLeft()
   end
+  if debug_mode then
+    if type(tonumber(key)) == "number" then
+      debug_map_place = tonumber(key)
+    end
+  end
 end
 
 function love.update(dt)
@@ -46,7 +51,7 @@ function love.update(dt)
       map:miniEdit(love.mouse.getX()-240,love.mouse.getY(),0)
     end
     if love.mouse.isDown("l") and debug_lmb then --inc
-      map:miniEdit(love.mouse.getX()-240,love.mouse.getY())
+      map:miniEdit(love.mouse.getX()-240,love.mouse.getY(),debug_map_place)
       debug_lmb = nil
     end
     if not love.mouse.isDown("l") then
