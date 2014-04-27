@@ -133,7 +133,7 @@ function events:update(dt)
 end
 
 function events:step()
-  if math.random(1,10) == 11 then
+  if math.random(1,10) == 1 then
     local re = self._random_encounters[#self._random_encounters]
     self:force(re.start,re.finish,re.text,re.choices)
     return true
