@@ -17,7 +17,32 @@ function player.new(x,y,dir)
   o.moveBackward=player.moveBackward
   o.turnLeft=player.turnLeft
   o.turnRight=player.turnRight
+
+  o.level=player.level
+  o:level(1)
+
   return o
+end
+
+function player:level(lvl)
+  self._level = lvl
+
+  self._maxhp = lvl*10
+  self._bhp = self._bhp or self._maxhp
+  self._hp = self._hp or self._bhp
+
+  self._maxatk = lvl*10
+  self._batk = self._batk or self._maxatk
+  self._atk = self._atk or self._batk
+
+  self._maxdef = lvl*10
+  self._bdef = self._bdef or self._maxdef
+  self._def = self._def or self._bdef
+
+  self._gold = self._gold or 0
+  
+  self._exp = 0
+  self._next_level_exp = lvl*100
 end
 
 function player:getX()

@@ -48,8 +48,7 @@ end
 function love.draw()
   local submap = map:submap(player:getX(),player:getY(),player:getDirection())
   local s = "p: "..player:getX()..","..player:getY().."\n"..
-    player:getDirection().."\n"..
-    (debug_map_place or "+")
+    player:getDirection()
   observablemap:draw(0,0,submap)
   love.graphics.draw(info_img,240,0)
   map:mini(240,0,player:getX(),player:getY())
@@ -59,7 +58,8 @@ function love.draw()
     love.graphics.print(
       "number .. set +\n"..
       "lshift+key .. save to file\n"..
-      "lctrl+key .. load from file\n",0,12)
+      "lctrl+key .. load from file\n"..
+      "marker: "..(debug_map_place or "+"),0,12)
   end
 end
 
