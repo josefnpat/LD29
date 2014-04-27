@@ -1,5 +1,7 @@
 local map = {}
 
+map._version = 1
+
 function map.new()
   local o={}
   o.mini=map.mini
@@ -29,8 +31,36 @@ function map.new()
   } --init
   o.getData=map.getData
   o.setData=map.setData
+  o.save=map.save
+  o.load=map.load
   o._scale = 4
   return o
+end
+
+function map:load(name)
+  if love.filesystem.isFile("maps/"..name) then
+    local raw = love.filesystem.read("maps/"..name)
+    local obj = json.decode(raw)
+    if obj.version == map._version then
+      self._data = obj.data
+      print("Map "..name.." loaded.")
+    else
+      print("Map "..name.." load failed. Version mismatch.")
+    end
+  else
+    print("Map "..name.." load failed. No file at `maps/"..name.."`.")
+  end
+end
+
+function map:save(name)
+  local obj = {}
+  obj.data = self._data
+  obj.version = map._version
+  local raw = json.encode(obj)
+  local output = io.open("maps/"..name, "w")
+  output:write(raw)
+  output:close()
+  print("Map "..name.." saved. `maps/"..name.."`")
 end
 
 function map:mini(ox,oy,px,py,submap)

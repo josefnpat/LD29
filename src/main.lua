@@ -1,4 +1,5 @@
 require("lovepixlr").init()
+require("json")
 
 fakedoom = require("fakedoom")
 
@@ -38,7 +39,11 @@ function love.keypressed(key)
     player:turnLeft()
   end
   if debug_mode then
-    if type(tonumber(key)) == "number" then
+   if love.keyboard.isDown("lshift") and key ~= "lshift" then
+      map:save(key)
+    elseif love.keyboard.isDown("lctrl") and key ~= "lcrtrl" then
+      map:load(key)
+    elseif type(tonumber(key)) == "number" then
       debug_map_place = tonumber(key)
     end
   end
