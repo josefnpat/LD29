@@ -1,41 +1,85 @@
 require("lovepixlr").init()
 require("json")
 
+font = love.graphics.newFont("assets/fonts/RobotoSlab-Regular.ttf",14)
+love.graphics.setFont(font)
+
+git,git_count = "missing git.lua",0
+pcall( function() return require("git") end );
+
+game_name = "Advanced Cave Crawler"
+
+love.window.setTitle(game_name.." - git-v"..git_count.." ["..git.."]")
+
 fakedoom = require("fakedoom")
 
 playerclass = require("playerclass")
 mapclass = require("mapclass")
 eventsclass = require("eventsclass")
 
+events = eventsclass.new()
+require("encounters")
+
+-- SPLASH SCREENS
+events:force(
+  function() end,
+  function()
+    events:force(
+      function() end,
+      function() love.load() end,
+      "",
+      nil,
+      love.graphics.newImage("assets/mss-logo.png"),
+      2
+    )
+  end,
+  "",
+  nil,
+  love.graphics.newImage("assets/love-logo.png"),
+  2
+)
 
 
 function love.load()
   if not LovePixlr:isBound() then
     LovePixlr.bind(320,240,"nearest")
+    LovePixlr.setMaxScale()
     info_img = love.graphics.newImage("assets/info.png")
   end
 
   map = mapclass.new(1,1,4,2,2,"s")
   map:load("s")
   player = playerclass.new(map:getStartX(),map:getStartY(),map:getStartDirection())
-  events = eventsclass.new()
-  require("encounters")
   observablemap = fakedoom.new()
   observablemap:setbg(2)
 
+  game = {
+    start_time = love.timer.getTime(),
+    encounters = 0,
+  }
   events:force(
     function() end,
     function() end,
-    "Welcome to Advanced Cave Crawler",
+    "Advanced Cave Crawler\n"..
+    "by @josefnpat for LD29\n\n"..
+    "Keyboard: Arrow keys & space|return\n"..
+    "(Supports Controllers)",
     {
       {text="New Game",exec=function()
          events:force(
            function() end,
-           function() end,
-           "Difficulty",
+           function()
+             events:force(
+               function() end,
+               function()
+               end,
+               "Escape the maze and get to the surface...\n\nif you can survive."
+             )
+           end,
+           "Difficulty Level",
            {
              {text="Mommy! Hold my hand!",exec=function() end},
-             {text="I'm prepared.",exec=function() end},
+             {text="My body is ready.",exec=function() end},
              {text="I shall exterminate everything around me that restricts me from being the master.",exec=function() end},
            }
          )
@@ -71,11 +115,15 @@ function love.keypressed(key)
   if not events:running() then
     if key == "up" then
       if player:moveForward(map:getData()) then
-        events:step()
+        if events:step() then
+          game.encounters = game.encounters + 1
+        end
       end
     elseif key == "down" then
       if player:moveBackward(map:getData()) then
-        events:step()
+        if events:step() then
+          game.encounters = game.encounters + 1
+        end
       end
     elseif key == "right" then
       player:turnRight()
@@ -122,12 +170,26 @@ function love.update(dt)
     player:setY(map:getStartY())
     player:setDirection(map:getStartDirection())
     if next_map then
-      map:load(next_map)
-    else
       events:force(
         function() end,
-        function() love.load() end,
-        "YOU WIN! (?)"
+        function()
+          map:load(next_map)
+        end,
+        "You find a set of stairs that hopefully leads to the surface."
+      )
+    else
+      events:force(
+        function() game.stop_time = love.timer.getTime() end,
+        function() 
+          events:force(
+            function() end,
+            function() love.load() end,
+            "YOU WIN!\n\n"..
+            "Time: "..math.floor(game.stop_time-game.start_time).."s\n"..
+            "Encounters: "..(game.encounters)
+          )
+        end,
+        "You find a set of stairs that leads to the surface ... but do you really want to leave?"
       )
     end
   end
