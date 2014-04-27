@@ -1,8 +1,8 @@
 local map = {}
 
-map._version = 1
+map._version = 2
 
-function map.new()
+function map.new(startx,starty)
   local o={}
   o.mini=map.mini
   o.miniEdit=map.miniEdit
@@ -29,6 +29,9 @@ function map.new()
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   } --init
+  o._start={x=startx,y=starty}
+  o.getStartX=map.getStartX
+  o.getStartY=map.getStartY
   o.getData=map.getData
   o.setData=map.setData
   o.save=map.save
@@ -117,6 +120,14 @@ end
 
 function map:setData(val)
   self._data=val
+end
+
+function map:getStartX()
+  return self._start.x
+end
+
+function map:getStartY()
+  return self._start.y
 end
 
 return map

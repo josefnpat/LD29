@@ -2,12 +2,12 @@ local player = {}
 
 player._dir = {"left","up","right","down"}
 
-function player.new()
+function player.new(x,y)
   local o={}
-  o._x=2 --init
+  o._x=x --init
   o.getX=player.getX
   o.setX=player.setX
-  o._y=2 --init
+  o._y=y --init
   o.getY=player.getY
   o.setY=player.setY
   o._direction=1 --init

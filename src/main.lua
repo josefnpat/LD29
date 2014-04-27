@@ -6,8 +6,8 @@ fakedoom = require("fakedoom")
 playerclass = require("playerclass")
 mapclass = require("mapclass")
 
-player = playerclass.new()
-map = mapclass.new()
+map = mapclass.new(2,2)
+player = playerclass.new(map:getStartX(),map:getStartY())
 
 obmap = fakedoom.new()
 obmap:setbg(2)
@@ -19,7 +19,9 @@ end
 
 function love.draw()
   local submap = map:submap(player:getX(),player:getY(),player:getDirection())
-  local s = "p: "..player:getX()..","..player:getY().."\n"..player:getDirection()
+  local s = "p: "..player:getX()..","..player:getY().."\n"..
+    player:getDirection().."\n"..
+    (debug_map_place or "+")
   obmap:draw(0,0,submap)
   love.graphics.draw(info_img,240,0)
   map:mini(240,0,player:getX(),player:getY())
@@ -54,6 +56,9 @@ function love.update(dt)
   if debug_mode then
     if love.mouse.isDown("r") then -- clear
       map:miniEdit(love.mouse.getX()-240,love.mouse.getY(),0)
+    end
+    if love.mouse.isDown("m") then
+      debug_map_place = nil
     end
     if love.mouse.isDown("l") and debug_lmb then --inc
       map:miniEdit(love.mouse.getX()-240,love.mouse.getY(),debug_map_place)
