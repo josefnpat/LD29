@@ -18,8 +18,15 @@ function player.new(x,y,dir)
   o.turnLeft=player.turnLeft
   o.turnRight=player.turnRight
 
-  o.level=player.level
-  o:level(1)
+  o._maxdef = 100
+  o._bdef = o._maxdef/2
+  o._def = o._bdef
+
+  o._maxatk = 10
+  o._batk = o._maxatk/2
+  o._atk = o._batk
+
+  o._gold = 0
 
   return o
 end

@@ -88,6 +88,7 @@ function events:update(dt)
 
       if check_all_dongs("up")  then
         if input_up then
+          sfx.play("choice")
           input_up = false
           self._current_choice = self._current_choice - 1
           if self._current_choice < 1 then
@@ -100,6 +101,7 @@ function events:update(dt)
 
       if check_all_dongs("down") then
         if input_down then
+          sfx.play("choice")
           input_down = false
           self._current_choice = self._current_choice + 1
           if self._current_choice > #self._current.choices then
@@ -114,6 +116,7 @@ function events:update(dt)
 
     if check_all_dongs("action") then
       if input_action then
+        sfx.play("action")
         input_action = false
         if self._current.choices then
           self._current.choices[self._current_choice].exec()
@@ -135,6 +138,7 @@ function events:step()
     self:force(re.start,re.finish,re.text,re.choices)
     return true
   end
+  sfx.play("step")
 end
 
 function events:add(start,finish,text,choices,img,timeout)

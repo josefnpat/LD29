@@ -1,6 +1,22 @@
 require("lovepixlr").init()
 require("json")
 
+sfx = {
+  choice = love.audio.newSource('assets/sfx/choice.wav','static'),
+  good = love.audio.newSource('assets/sfx/good.wav','static'),
+  bad = love.audio.newSource('assets/sfx/bad.wav','static'),
+  action =love.audio.newSource('assets/sfx/action.wav','static'),
+  step = love.audio.newSource('assets/sfx/step.wav','static'),
+  play = function(f)
+    sfx[f]:stop()
+    sfx[f]:play()
+  end
+}
+
+music = love.audio.newSource("assets/inudge-arecord.ogg","stream")
+music:setLooping(true)
+music:play()
+
 dong2lib = require("dong2lib")
 
 font = love.graphics.newFont("assets/fonts/RobotoSlab-Regular.ttf",14)
