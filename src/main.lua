@@ -17,6 +17,15 @@ observablemap:setbg(2)
 function love.load()
   LovePixlr.bind(320,240,"nearest")
   info_img = love.graphics.newImage("assets/info.png")
+  events:force(
+    function() print("Menu Started") end,
+    function() print("Menu Ended") end,
+    "Welcome to Advanced Cave Crawler",
+    {
+      {text="New Game",exec=function() print("new game") end},
+      {text="Quit",exec=function() love.event.quit() end},
+    }
+  )
 end
 
 function love.draw()

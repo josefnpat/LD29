@@ -6,6 +6,8 @@ function events.new()
   o.update=events.update
   o.step=events.step
   o.add=events.add
+  o.running=events.running
+  o.force=events.force
   return o
 end
 
@@ -20,6 +22,13 @@ function events:step()
 end
 
 function events:add()
+end
+
+function events:running()
+end
+
+function events:force()
+
 end
 
 return events
