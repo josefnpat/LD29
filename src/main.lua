@@ -5,12 +5,14 @@ fakedoom = require("fakedoom")
 
 playerclass = require("playerclass")
 mapclass = require("mapclass")
+eventsclass = require("eventsclass")
 
-map = mapclass.new(2,2,3,3,"phhbt")
-player = playerclass.new(map:getStartX(),map:getStartY())
-
-obmap = fakedoom.new()
-obmap:setbg(2)
+map = mapclass.new(1,1,4,2,2,"s")
+map:load("s")
+player = playerclass.new(map:getStartX(),map:getStartY(),map:getStartDirection())
+events = eventsclass.new()
+observablemap = fakedoom.new()
+observablemap:setbg(2)
 
 function love.load()
   LovePixlr.bind(320,240,"nearest")
@@ -22,19 +24,29 @@ function love.draw()
   local s = "p: "..player:getX()..","..player:getY().."\n"..
     player:getDirection().."\n"..
     (debug_map_place or "+")
-  obmap:draw(0,0,submap)
+  observablemap:draw(0,0,submap)
   love.graphics.draw(info_img,240,0)
   map:mini(240,0,player:getX(),player:getY())
   love.graphics.print(s,240,80)
+  if debug_mode then
+    love.graphics.print(
+      "number .. set +\n"..
+      "lshift+key .. save to file\n"..
+      "lctrl+key .. load from file\n",0,12)
+  end
 end
 
 function love.keypressed(key)
   if key == "`" then
     debug_mode = not debug_mode
   elseif key == "up" then
-    player:moveForward(map:getData())
+    if player:moveForward(map:getData()) then
+      events:step()
+    end
   elseif key == "down" then
-    player:moveBackward(map:getData())
+    if player:moveBackward(map:getData()) then
+      events:step()
+    end
   elseif key == "right" then
     player:turnRight()
   elseif key == "left" then
@@ -69,6 +81,14 @@ function love.update(dt)
     end
   end
   if player:getX() == map:getFinishX() and player:getY() == map:getFinishY() then
-    map:load(map:getNextLevel())
+    local next_map = map:getNextLevel()
+    player:setX(map:getStartX())
+    player:setY(map:getStartY())
+    player:setDirection(map:getStartDirection())
+    if next_map then
+      map:load(next_map)
+    else
+      print("YOU WIN")
+    end
   end
 end

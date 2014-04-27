@@ -2,7 +2,7 @@ local player = {}
 
 player._dir = {"left","up","right","down"}
 
-function player.new(x,y)
+function player.new(x,y,dir)
   local o={}
   o._x=x --init
   o.getX=player.getX
@@ -10,7 +10,7 @@ function player.new(x,y)
   o._y=y --init
   o.getY=player.getY
   o.setY=player.setY
-  o._direction=1 --init
+  o._direction=dir --init
   o.getDirection=player.getDirection
   o.setDirection=player.setDirection
   o.moveForward=player.moveForward
@@ -41,13 +41,7 @@ function player:getDirection()
 end
 
 function player:setDirection(val)
-  for i,v in pairs(player._dir) do
-    if val == v then
-      self._direction=i
-      return
-    end
-  end
-  print("Could not set direction '"..val.."'")
+  self._direction=val
 end
 
 player._move_offset = {
@@ -64,6 +58,7 @@ function player:moveForward(map)
   if map[ny] and map[ny][nx] == 0 then
     self:setX(nx)
     self:setY(ny)
+    return true
   end
 end
 
@@ -74,6 +69,7 @@ function player:moveBackward(map)
   if map[ny] and map[ny][nx] == 0 then
     self:setX(nx)
     self:setY(ny)
+    return true
   end
 end
 

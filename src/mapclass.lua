@@ -1,37 +1,23 @@
 local map = {}
 
-map._version = 3
+map._version = 5
 
-function map.new(startx,starty,finishx,finishy,next_level)
+function map.new(startx,starty,startdir,finishx,finishy,next_level)
   local o={}
   o.mini=map.mini
   o.miniEdit=map.miniEdit
   o.submap=map.submap
-  o._data={
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  } --init
-  o._start={x=startx,y=starty}
+  o._data={} --init
+  for y = 1,20 do
+    o._data[y] = {}
+    for x = 1,20 do
+      o._data[y][x] = 0
+    end
+  end
+  o._start={x=startx,y=starty,dir=startdir}
   o.getStartX=map.getStartX
   o.getStartY=map.getStartY
+  o.getStartDirection=map.getStartDirection
 
   o._finish={x=finishx,y=finishy}
   o.getFinishX=map.getFinishX
@@ -69,11 +55,13 @@ end
 
 function map:save(name)
   local obj = {}
-  obj.data = self._data
+
   obj.version = map._version
-  obj.start = map._start
-  obj.finish = map._finish
-  obj.next_level = map._next_level
+
+  obj.data = self._data
+  obj.start = self._start
+  obj.finish = self._finish
+  obj.next_level = self._next_level
   local raw = json.encode(obj)
   local output = io.open("maps/"..name, "w")
   output:write(raw)
@@ -89,8 +77,14 @@ function map:mini(ox,oy,px,py,submap)
       love.graphics.rectangle("fill",ox+(x-1)*self._scale,oy+(y-1)*self._scale,self._scale,self._scale)
     end
   end
+
+  local fx,fy = self._finish.x,self._finish.y
+  love.graphics.setColor(0,255,0)
+  love.graphics.rectangle("fill",ox+(fx-1)*self._scale,oy+(fy-1)*self._scale,self._scale,self._scale)
+
   love.graphics.setColor(255,0,0)
   love.graphics.rectangle("fill",ox+(px-1)*self._scale,oy+(py-1)*self._scale,self._scale,self._scale)
+
   love.graphics.setColor(255,255,255)
 end
 
@@ -139,6 +133,10 @@ end
 
 function map:getStartX()
   return self._start.x
+end
+
+function map:getStartDirection()
+  return self._start.dir
 end
 
 function map:getStartY()
