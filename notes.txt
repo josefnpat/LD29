@@ -1,0 +1,53 @@
+diablo cloneeee
+multiple subterranian levels
+
+
+
+hacker game with three levels:
+
+1) Top down game
+2) Visual Code
+3) Code
+4) Assembly
+
+
+Spy game
+
+Ant game?
+
+Really wierd game where you go under
+
+
+A game where everything is normal, but then you go under the surface and hack it apart.
+
+
+You are a bird, and you will die if you go under the surface
+
+Things are not as they appear.
+
+A game where you are taught one thing, and if you follow the rules, you lose.
+
+If you break the rules, you win.
+
+
+A puzzle game where you need to remove layers.
+
+
+Falling game?
+
+
+Sandbox game where you have to live under the surface.
+  * Ladders
+  * Shovels
+  * Lamps
+  * Coal
+
+
+Fight Monsters
+Get Loot
+Find the  to the next level
+
+ * Maze Generator
+ * Monsters
+ * Attack System
+ * 
