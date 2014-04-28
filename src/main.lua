@@ -20,6 +20,9 @@ music:play()
 dong2lib = require("dong2lib")
 
 font = love.graphics.newFont("assets/fonts/RobotoSlab-Regular.ttf",14)
+
+font_small = love.graphics.newFont("assets/fonts/RobotoSlab-Regular.ttf",10)
+
 love.graphics.setFont(font)
 
 git,git_count = "missing git.lua",0
@@ -140,7 +143,9 @@ function love.load()
   game = {
     start_time = love.timer.getTime(),
     encounters = 0,
+    steps = 0,
   }
+  global_random_step = 8
   events:force(
     function() end,
     function() end,
@@ -162,9 +167,9 @@ function love.load()
            end,
            "Difficulty Level",
            {
-             {text="Mommy! Hold my hand!",exec=function() end},
-             {text="My body is ready.",exec=function() end},
-             {text="I shall exterminate everything around me that restricts me from being the master.",exec=function() end},
+             {text="Mommy! Hold my hand!",exec=function() global_diff=3 end},
+             {text="My body is ready.",exec=function() global_diff=5 end},
+             {text="I shall exterminate everything around me that restricts me from being the master.",exec=function() global_diff=7 end},
            }
          )
        end},
@@ -180,7 +185,7 @@ function draw_bar(x,y,w,h,text,ratio,color)
   love.graphics.setColor(color)
   love.graphics.draw(bar_img,x,y,0,w*ratio,h/20)
   love.graphics.setColor(255,255,255)
-  love.graphics.printf(text,x,y,w,"center")
+  love.graphics.printf(text,x,y+4,w,"center")
 end
 
 dir_img = love.graphics.newImage("assets/dir.png")
@@ -195,12 +200,15 @@ function love.draw()
   local cardinal = {"west","north","east","south"}
   love.graphics.printf("FACING\n"..string.upper(cardinal[player._direction]),240,
     80+(80-cfont:getHeight()*2)/2,80,"center")
-
-  draw_bar(240,160+20*0,80,20,"ATK: "..player._atk.."/"..player._batk,
+  
+  love.graphics.setFont(font_small)
+  draw_bar(240,160+20*0,80,20,"ATK "..player._atk.."/"..player._batk,
     (player._atk/player._batk),{255,0,0})
-  draw_bar(240,160+20*1,80,20,"DEF: "..player._def.."/"..player._bdef,
+  draw_bar(240,160+20*1,80,20,"DEF "..player._def.."/"..player._bdef,
     (player._def/player._bdef),{54,74,196})
-  draw_bar(240,160+20*2,80,20,"GOLD: "..player._gold,1,{122,104,59})
+  draw_bar(240,160+20*2,80,20,"GOLD "..player._gold,1,{122,104,59})
+  draw_bar(240,160+20*3,80,20,"SCORE "..math.floor(player._gold/(love.timer.getTime()-game.start_time))*10,1,{72,215,73})
+  love.graphics.setFont(font)
 
   events:draw()
   if debug_mode then
@@ -208,6 +216,7 @@ function love.draw()
       "number .. set +\n"..
       "lshift+key .. save to file\n"..
       "lctrl+key .. load from file\n"..
+      "global_random_step:" ..global_random_step .."\n"..
       "marker: "..(debug_map_place or "+"),0,12)
   end
 end
@@ -229,6 +238,12 @@ function love.keypressed(key)
       map:load(key)
     elseif type(tonumber(key)) == "number" then
       debug_map_place = tonumber(key)
+    elseif love.keyboard.isDown("g") then
+      local re = events._random_encounters_good[#events._random_encounters_good]
+      events:force(re.start,re.finish,re.text,re.choices)
+    elseif love.keyboard.isDown("b") then
+      local re = events._random_encounters_bad[#events._random_encounters_bad]
+      events:force(re.start,re.finish,re.text,re.choices)
     end
   end
 
@@ -338,12 +353,15 @@ function love.update(dt)
             "YOU WIN!\n\n"..
             "Time: "..math.floor(game.stop_time-game.start_time).."s\n"..
             "Encounters: "..(game.encounters).."\n"..
-            "Gold: "..(player._gold)
+            "Gold: "..(player._gold).."\n"..
+            "Steps: "..(game.steps).."\n"..
+            "Score: "..math.floor(player._gold/(game.stop_time-game.start_time))*10
           )
         end,
         "You find a set of stairs that leads to the surface ... but do you really want to leave?"
       )
     end
+  else
   end
 
 end

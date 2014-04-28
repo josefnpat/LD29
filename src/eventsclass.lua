@@ -13,7 +13,8 @@ function events.new()
   o.force=events.force
 
   o._queue = {}
-  o._random_encounters = {}
+  o._random_encounters_good = {}
+  o._random_encounters_bad = {}
   return o
 end
 
@@ -27,12 +28,12 @@ function events:draw()
       local cfont = love.graphics.getFont()
       local font_h = cfont:getHeight()
 
-      local _,text_l = cfont:getWrap(self._current.text,240-events.padding*2)
+      local _,text_l = cfont:getWrap(self._current.text,240-events.padding*4)
       local text_h = font_h*text_l
 
       local choice_l = 0
       for i,v in pairs(self._current.choices or {}) do
-        local _,vchoice_l = cfont:getWrap(v.text,240-events.padding*2)
+        local _,vchoice_l = cfont:getWrap(v.text,240-events.padding*4)
         choice_l = choice_l + vchoice_l
       end
       local choice_h = font_h*choice_l
@@ -133,16 +134,28 @@ function events:update(dt)
 end
 
 function events:step()
-  if math.random(1,10) == 1 then
-    local re = self._random_encounters[#self._random_encounters]
+  game.steps = game.steps + 1
+  if math.random(1,global_random_step) == 1 and not (map:getFinishX() == player:getX() and map:getFinishY() == player:getY())then
+    local re
+    if math.random(1,10) > global_diff then -- good
+      re = self._random_encounters_good[math.random(1,#self._random_encounters_good)]
+      sfx.play("good")
+    else -- bad
+      re = self._random_encounters_bad[math.random(1,#self._random_encounters_bad)]
+      sfx.play("bad")
+    end
     self:force(re.start,re.finish,re.text,re.choices)
     return true
   end
   sfx.play("step")
 end
 
-function events:add(start,finish,text,choices,img,timeout)
-  table.insert(self._random_encounters,
+function events:add(start,finish,text,choices,img,timeout,polarity)
+  local target = self._random_encounters_good
+  if polarity == "bad" then
+    target = self._random_encounters_bad
+  end
+  table.insert(target,
     {start=start,finish=finish,text=text,choices=choices,img=img,timeout=timeout}
   )
 end
