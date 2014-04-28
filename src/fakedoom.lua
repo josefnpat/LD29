@@ -17,7 +17,7 @@ end
 
 fakedoom.load_wall("default",{31,31,31})
 fakedoom.load_wall("dirt",{89,66,47})
-fakedoom.load_wall("lava",{255,0,0})
+fakedoom.load_wall("lava",{127,0,0})
 fakedoom.load_wall("moss",{49,128,28})
 
 function fakedoom.new()
