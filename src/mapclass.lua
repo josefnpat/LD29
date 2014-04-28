@@ -36,6 +36,10 @@ function map.new(startx,starty,startdir,finishx,finishy,next_level)
 end
 
 function map:load(name)
+  global_random_step = global_random_step - 1
+  if global_random_step < 1 then
+    global_random_step = 1
+  end
   if love.filesystem.isFile("maps/"..name) then
     local raw = love.filesystem.read("maps/"..name)
     local obj = json.decode(raw)

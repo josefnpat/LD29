@@ -128,6 +128,8 @@ setBindings(keyb_dong)
 table.insert(dongs,keyb_dong) -- Keyboard and mouse
 
 function love.load()
+  global_random_step = 12
+
   if not LovePixlr:isBound() then
     LovePixlr.bind(320,240,"nearest")
     LovePixlr.setMaxScale()
@@ -145,7 +147,7 @@ function love.load()
     encounters = 0,
     steps = 0,
   }
-  global_random_step = 8
+  
   events:force(
     function() end,
     function() end,
