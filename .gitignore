@@ -1,1 +1,4 @@
 *.swp
+src/dong2lib
+src/git.lua
+._temp.love
