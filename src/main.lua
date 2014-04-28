@@ -152,7 +152,8 @@ function love.load()
     "-------------\n"..
     game_name.."\n"..
     "-------------\n\n"..
-    "@josefnpat #LD48 LD29",
+    "@josefnpat for LD29\n"..
+    "missingsentinelsoftware.com",
     {
       {text="New Game",exec=function()
          events:force(
