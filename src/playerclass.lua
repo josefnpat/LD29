@@ -18,7 +18,7 @@ function player.new(x,y,dir)
   o.turnLeft=player.turnLeft
   o.turnRight=player.turnRight
 
-  o._batk = 20
+  o._batk = 40
   o._atk = o._batk
 
   o._bdef = 40
