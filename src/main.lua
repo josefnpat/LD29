@@ -30,7 +30,7 @@ love.graphics.setFont(font)
 git,git_count = "missing git.lua",0
 pcall( function() return require("git") end );
 
-game_name = "Advanced Cave Crawler"
+game_name = "Advanced Cave Crawler+"
 
 love.window.setTitle(game_name.." - git-v"..git_count.." ["..git.."]")
 
@@ -157,6 +157,7 @@ function love.load()
     game_name.."\n"..
     "-------------\n\n"..
     "@josefnpat for LD29\n"..
+    "POST-COMPO\n"..
     "missingsentinelsoftware.com",
     {
       {text="New Game",exec=function()
