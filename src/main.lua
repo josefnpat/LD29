@@ -130,7 +130,7 @@ setBindings(keyb_dong)
 table.insert(dongs,keyb_dong) -- Keyboard and mouse
 
 function love.load()
-  global_random_step = 12
+  global_random_step = 6
 
   if not LovePixlr:isBound() then
     LovePixlr.bind(320,240,"nearest")
