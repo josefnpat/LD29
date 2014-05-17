@@ -1,3 +1,5 @@
+math.randomseed( os.time() )
+
 require("lovepixlr").init()
 require("json")
 
