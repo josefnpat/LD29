@@ -341,6 +341,8 @@ function love.update(dt)
     end
   end
 
+  map:clearFog(player:getX(),player:getY())
+
   if player:getX() == map:getFinishX() and player:getY() == map:getFinishY() then
     local next_map = map:getNextLevel()
     player:setX(map:getStartX())
