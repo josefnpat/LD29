@@ -104,7 +104,7 @@ function map:mini(ox,oy,px,py,submap)
   for y,row in pairs(self._data) do
     for x,v in pairs(row) do
       local color = v == 0 and {255,255,255} or fakedoom.walls[v].color
-      local fog = self._fog[y][x]
+      local fog = debug_mode and 1 or self._fog[y][x]
       color[1]=color[1]*fog
       color[2]=color[2]*fog
       color[3]=color[3]*fog
