@@ -150,14 +150,16 @@ function events:step()
   sfx.play("step")
 end
 
-function events:add(start,finish,text,choices,img,timeout,polarity)
+function events:add(start,finish,text,choices,img,timeout,polarity,count)
   local target = self._random_encounters_good
   if polarity == "bad" then
     target = self._random_encounters_bad
   end
-  table.insert(target,
-    {start=start,finish=finish,text=text,choices=choices,img=img,timeout=timeout}
-  )
+  for i = 1,count or 1 do
+    table.insert(target,
+	  {start=start,finish=finish,text=text,choices=choices,img=img,timeout=timeout}
+    )
+  end
 end
 
 function events:running()

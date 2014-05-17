@@ -10,7 +10,8 @@ events:add(
   nil,--choices
   nil,--img
   nil,--timeout
-  "bad"--polarity
+  "bad",--polarity,
+  5 -- count
 )
 
 events:add(
@@ -25,7 +26,8 @@ events:add(
   nil,--choices
   nil,--img
   nil,--timeout
-  "bad"--polarity
+  "bad",--polarity,
+  5 -- count
 )
 
 events:add(
@@ -40,7 +42,8 @@ events:add(
   nil,--choices
   nil,--img
   nil,--timeout
-  "bad"--polarity
+  "bad",--polarity,
+  5 -- count
 )
 
 events:add(
@@ -132,7 +135,8 @@ events:add(
   },--choices
   nil,--img
   nil,--timeout
-  "bad"--polarity
+  "bad",--polarity
+  30--count
 )
 
 events:add(
@@ -200,7 +204,8 @@ events:add(
   },--choices
   nil,--img
   nil,--timeout
-  "bad"--polarity
+  "bad",--polarity
+  20--count
 )
 
 events:add(
@@ -268,7 +273,8 @@ events:add(
   },--choices
   nil,--img
   nil,--timeout
-  "bad"--polarity
+  "bad",--polarity
+  10--count
 )
 
 -- easter egg
