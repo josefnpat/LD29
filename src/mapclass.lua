@@ -15,6 +15,10 @@ function map.new(startx,starty,startdir,finishx,finishy,next_level)
       o._data[y][x] = 1
     end
   end
+  o._init_fog = map._init_fog
+  o:_init_fog()
+  o.clearFog = map.clearFog
+
   o._start={x=startx,y=starty,dir=startdir}
   o.getStartX=map.getStartX
   o.getStartY=map.getStartY
@@ -36,6 +40,27 @@ function map.new(startx,starty,startdir,finishx,finishy,next_level)
   return o
 end
 
+function map:_init_fog()
+  self._fog={}
+  for y = 1,map._size do
+    self._fog[y] = {}
+    for x = 1,map._size do
+      self._fog[y][x] = 0
+    end
+  end
+end
+
+function map:clearFog(x,y)
+  for a = -1,1 do
+    for b = -1,1 do
+      if self._fog[y+a] and self._fog[y+a][x+b] then
+        self._fog[y+a][x+b] = 1/2
+      end
+    end
+  end
+  self._fog[y][x] = 0
+end
+
 function map:load(name)
   global_random_step = global_random_step - 1
   if global_random_step < 1 then
@@ -49,6 +74,7 @@ function map:load(name)
       self._start = obj.start
       self._finish = obj.finish
       self._next_level = obj.next_level
+      self:_init_fog()
       print("Map "..name.." loaded.")
     else
       print("Map "..name.." load failed. Version mismatch.")
@@ -78,6 +104,10 @@ function map:mini(ox,oy,px,py,submap)
   for y,row in pairs(self._data) do
     for x,v in pairs(row) do
       local color = v == 0 and {255,255,255} or fakedoom.walls[v].color
+      local fog = self._fog[y][x]
+      color[1]=color[1]*fog
+      color[2]=color[2]*fog
+      color[3]=color[3]*fog
       love.graphics.setColor(color)
       love.graphics.rectangle("fill",ox+(x-1)*self._scale,oy+(y-1)*self._scale,self._scale,self._scale)
     end
