@@ -24,7 +24,8 @@ function player.new(x,y,dir)
   o._bdef = 40
   o._def = o._bdef
 
-  o._gold = 0
+  o._starting_gold = 100
+  o._gold = o._starting_gold
 
   return o
 end

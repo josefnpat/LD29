@@ -77,7 +77,7 @@ events:add(
   {
     {text="Attack it!",exec=function()
     
-      player._def = player._def - math.random(1,2)
+      player._def = player._def - math.random(2,4)
       if player._def < 0 then
         player._def = 0
         events:force(
@@ -110,7 +110,15 @@ events:add(
     
     end},
     {text="Run Away!",exec=function()
-      if math.random(1,4) == 1 then
+      player._def = player._def - math.random(1,2)
+      if player._def < 0 then
+        player._def = 0
+        events:force(
+          function() end,
+          function() love.load() end,
+          "GAME OVER.\n\nYou are killed, your bones left to be gnawned on by the creatures of the caves."
+        )
+      elseif math.random(1,8) == 1 then
         events:force(
           function() end,
           function() end,
@@ -146,7 +154,7 @@ events:add(
   {
     {text="Attack it!",exec=function()
     
-      player._def = player._def - math.random(2,4)
+      player._def = player._def - math.random(4,8)
       if player._def < 0 then
         player._def = 0
         events:force(
@@ -179,7 +187,15 @@ events:add(
     
     end},
     {text="Run Away!",exec=function()
-      if math.random(1,4) == 1 then
+      player._def = player._def - math.random(2,4)
+      if player._def < 0 then
+        player._def = 0
+        events:force(
+          function() end,
+          function() love.load() end,
+          "GAME OVER.\n\nYou are killed, your bones left to be gnawned on by the creatures of the caves."
+        )
+      elseif math.random(1,8) == 1 then
         events:force(
           function() end,
           function() end,
@@ -215,7 +231,7 @@ events:add(
   {
     {text="Attack it!",exec=function()
     
-      player._def = player._def - math.random(4,8)
+      player._def = player._def - math.random(8,16)
       if player._def < 0 then
         player._def = 0
         events:force(
@@ -248,7 +264,15 @@ events:add(
     
     end},
     {text="Run Away!",exec=function()
-      if math.random(1,4) > 1 then
+      player._def = player._def - math.random(4,8)
+      if player._def < 0 then
+        player._def = 0
+        events:force(
+          function() end,
+          function() love.load() end,
+          "GAME OVER.\n\nYou are killed, your bones left to be gnawned on by the creatures of the caves."
+        )
+      elseif math.random(1,8) > 1 then
         events:force(
           function() end,
           function() end,

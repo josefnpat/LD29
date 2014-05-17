@@ -212,7 +212,7 @@ function love.draw()
   draw_bar(240,160+20*1,80,20,"DEF "..player._def.."/"..player._bdef,
     (player._def/player._bdef),{54,74,196})
   draw_bar(240,160+20*2,80,20,"GOLD "..player._gold,1,{122,104,59})
-  draw_bar(240,160+20*3,80,20,"SCORE "..math.floor(player._gold/(love.timer.getTime()-game.start_time))*10,1,{72,215,73})
+  draw_bar(240,160+20*3,80,20,"SCORE "..get_score(),1,{72,215,73})
   love.graphics.setFont(font)
 
   events:draw()
@@ -260,6 +260,12 @@ function check_all_dongs(bind)
       return true
     end
   end
+end
+
+function get_score()
+  local goldscore = math.max(0,player._gold-player._starting_gold)
+  local s = math.floor(goldscore/game.steps*100)
+  return tostring(s) == "nan" and 0 or s
 end
 
 function love.update(dt)
@@ -360,7 +366,7 @@ function love.update(dt)
             "Encounters: "..(game.encounters).."\n"..
             "Gold: "..(player._gold).."\n"..
             "Steps: "..(game.steps).."\n"..
-            "Score: "..math.floor(player._gold/(game.stop_time-game.start_time))*10
+            "Score: "..get_score()
           )
         end,
         "You find a set of stairs that leads to the surface ... but do you really want to leave?"
