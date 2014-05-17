@@ -6,7 +6,7 @@ events:add(
       player._atk = player._batk
     end
   end,--finish
-  "You find a sword. Your attack goes up.",--text
+  "You find a whetstone. Your attack goes up.",--text
   nil,--choices
   nil,--img
   nil,--timeout
@@ -22,7 +22,7 @@ events:add(
       player._def = player._bdef
     end
   end,--finish
-  "You find a shield. Your defence goes up.",--text
+  "You find a patch. Your defence goes up.",--text
   nil,--choices
   nil,--img
   nil,--timeout
@@ -72,7 +72,7 @@ events:add(
   function() end,--finish
   "You stumble upon a hermit who is selling goods.",--text
   {
-    {text="Buy a new sword (25g)",exec=function()
+    {text="Buy a whetstone (25g)",exec=function()
       if player._gold >= 25 then
         player._gold = player._gold - 25
         events:force(
@@ -80,7 +80,7 @@ events:add(
           function()
             player._atk = player._batk
           end,
-          "You buy the sword. The hermit packs up and leaves."
+          "You buy whetstone. The hermit packs up and leaves."
         )
       else
         events:force(
@@ -90,7 +90,7 @@ events:add(
         )
       end
     end},
-    {text="Buy a new shield (25g)",exec=function()
+    {text="Buy a patch (25g)",exec=function()
       if player._gold >= 25 then
         player._gold = player._gold - 25
         events:force(
@@ -98,7 +98,7 @@ events:add(
           function()
             player._def = player._bdef
           end,
-          "You buy the shield. The hermit packs up and leaves."
+          "You buy the patch. The hermit packs up and leaves."
         )
       else
         events:force(
