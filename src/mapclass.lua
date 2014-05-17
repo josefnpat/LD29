@@ -1,6 +1,7 @@
 local map = {}
 
 map._version = 5
+map._size = 20
 
 function map.new(startx,starty,startdir,finishx,finishy,next_level)
   local o={}
@@ -8,9 +9,9 @@ function map.new(startx,starty,startdir,finishx,finishy,next_level)
   o.miniEdit=map.miniEdit
   o.submap=map.submap
   o._data={} --init
-  for y = 1,20 do
+  for y = 1,map._size do
     o._data[y] = {}
-    for x = 1,20 do
+    for x = 1,map._size do
       o._data[y][x] = 1
     end
   end
