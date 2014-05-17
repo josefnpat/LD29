@@ -33,7 +33,7 @@ events:add(
 events:add(
   function() end,--start
   function()
-    player._gold = player._gold + math.random(5,15)
+    player._gold = player._gold + math.random(50,150)
   end,--finish
   "You find some gold on the ground.",--text
   nil,--choices

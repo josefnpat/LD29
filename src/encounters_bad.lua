@@ -90,7 +90,7 @@ events:add(
           events:force(
             function() end,
             function()
-              player._gold = player._gold + math.random(5,15)
+              player._gold = player._gold + math.random(50,150)
               if math.random(0,1)==1 then
                 player._batk = player._batk + 1
               else
@@ -159,7 +159,7 @@ events:add(
           events:force(
             function() end,
             function()
-              player._gold = player._gold + math.random(10,30)
+              player._gold = player._gold + math.random(100,300)
               if math.random(0,1)==1 then
                 player._batk = player._batk + 2
               else
@@ -228,7 +228,7 @@ events:add(
           events:force(
             function() end,
             function()
-              player._gold = player._gold + math.random(20,60)
+              player._gold = player._gold + math.random(200,600)
               if math.random(0,1)==1 then
                 player._batk = player._batk + 4
               else
